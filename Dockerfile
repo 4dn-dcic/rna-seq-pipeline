@@ -17,8 +17,7 @@ RUN apt-get update && apt-get install -y \
 RUN pip3 install pandas
 RUN pip3 install pysam
 
-# Add mountpoint directory
-RUN mkdir /data
+
 # Stick to Jin's way of organizing the directory structure
 RUN mkdir /software
 WORKDIR /software
@@ -64,5 +63,4 @@ ARG BRANCH
 ENV BUILD_BRANCH=${BRANCH}
 ARG BUILD_TAG
 ENV MY_TAG=${BUILD_TAG}
-
-ENTRYPOINT ["/bin/bash", "-c"]
+WORKDIR /
