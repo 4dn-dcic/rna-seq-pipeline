@@ -1,5 +1,6 @@
 {
     "default_runtime_attributes" : {
-        "singularity_container" : "~/.singularity/rna-seq-pipeline-v1.0.simg"
+        "singularity_container" : "~/.singularity/rna-seq-pipeline_v1.0.sif",
+        "singularity_bindpath" : "paths to all the data folders here"
     }
 }
