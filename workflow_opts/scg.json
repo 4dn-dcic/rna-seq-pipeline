@@ -1,7 +1,6 @@
 {
     "default_runtime_attributes" : {
-        "slurm_account" : "YOUR_SLURM_ACCOUNT",
-        "singularity_container" : "~/.singularity/rna-seq-pipeline-v1.0.simg",
-        "singularity_bindpath" : "~/rna-seq-pipeline"
+        "singularity_container" : "/reference/ENCODE/pipeline_singularity_images/rna-seq-pipeline_v1.0.sif",
+        "singularity_bindpath" : "~/rna-seq-pipeline,/reference/ENCODE"
     }
 }
