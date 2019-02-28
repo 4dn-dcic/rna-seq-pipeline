@@ -12,6 +12,13 @@ To check which Java version you already have, run:
 You are looking for 1.8 or higher. If the requirement is not fulfilled follow installation instructions for [mac](https://java.com/en/download/help/mac_install.xml) or
 [linux](http://openjdk.java.net/install/) or use your favorite installation method.
 
+## Cromwell
+
+Download Cromwell engine:
+```bash
+  $ wget -N -c https://github.com/broadinstitute/cromwell/releases/download/35/cromwell-35.jar
+```
+
 ## Docker
 
 Pipeline code is packaged and distributed in Docker containers, and thus Docker installation is needed. 
@@ -19,7 +26,10 @@ Follow instructions for [mac](https://docs.docker.com/docker-for-mac/install/) o
 
 ## Singularity
 
-If for some reason you cannot run Docker, install [singularity](https://www.sylabs.io/guides/2.6/user-guide/installation.html) and have a look at [HOWTO](howto.md#local-with-singularity) for an example of how to run pipeline with singularity. Pipeline requires singularity version `>=2.5.2`, the link takes you to version `2.6.0`.
+If for some reason you cannot run Docker, install [singularity](https://www.sylabs.io/guides/2.6/user-guide/installation.html) and have a look at [HOWTO](howto.md#local-with-singularity) for an example of how to run pipeline with singularity. Pipeline requires singularity version `>=2.5.2`, the link takes you to version `2.6.0`. To check which singularity version (if any) is already installed, run:
+```bash
+  $ singularity version
+```
 
 ## Google Cloud
 

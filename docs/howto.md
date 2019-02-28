@@ -295,75 +295,34 @@ $ java -jar -Dconfig.file=backends/backend.conf -Dbackend.default=singularity cr
 6. See outputs in `cromwell-executions/rna/[RUNHASH]`.
 
 
-## Sherlock with Singularity
+## Stanford SCG4 with Singularity
 
-The goal is to run a paired-end, strand-specific experiment on Sherlock using singularity.
+The goal is to run a paired-end, strand-specific experiment on SCG4 using singularity.
 
-1. SSH into Sherlock's login node:
+1. SSH into SCG4's login node:
 
 ```bash
-  $ ssh user@login.sherlock.stanford.edu
+  $ ssh user@login.scg.stanford.edu
 ```
 
-2. Get the code and move to the repo directory:
+2. Clone code repository into your $HOME directory and move to the repo directory:
 
 ```bash
+  $ cd
   $ git clone https://github.com/ENCODE-DCC/rna-seq-pipeline
   $ cd rna-seq-pipeline
 ```
 
-3. Get STAR and kallisto index files:
+The singularity image and necessary reference files are stored in `/reference/ENCODE/pipeline_singularity_images` and `/reference/ENCODE/pipeline_genome_data_rna`. You don't need to worry about image building or downloading references. All you need is [cromwell](installation.md#cromwell) in your $HOME directory.
+
+3. Run the pipeline by submitting the script located in `~/rna-seq-pipeline/examples/scg/`:
 
 ```bash
-  $ curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz -o test_data/GRCh38_v24_ERCC_phiX_starIndex_chr19only.tgz
-  $ curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx -o test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx 
-``` 
-
-4. Load singularity and java modules into your environment. You can add the lines to your `~/.bashrc` or `~/.bash_profile` if you want them available always when you log in to Sherlock:
-
-```bash
-  $ module load system singularity
-  $ module load java
+  cd ~/rna-seq-pipeline
+  sbatch -A [YOUR SCG4 PAID ACCOUNT] examples/scg/scg_submit_testsample_singularity.sh
 ```
 
-5. Build the singularity image for the pipeline. The following pulls the pipeline docker image, and uses that to construct the singularity image. The image will be stored in `~/.singularity`. It is bad practice to build images (or do any other intensive work) on login nodes. For this reason we will first invoke an interactive session on a different node by running `sdev` command, and building there (It will take few seconds to get back into the shell after running `sdev`).
-
-```bash
-  $ sdev
-  $ SINGULARITY_PULLFOLDER=~/.singularity singularity pull docker://quay.io/encode-dcc/rna-seq-pipeline:v1.0
-  $ exit #this takes you back to the login node
-```
-
-6. Open `workflow_opts/sherlock.json` in your favorite text editor:
-
-```
-{
-    "default_runtime_attributes" : {
-        "singularity_container" : "~/.singularity/rna-seq-pipeline-v1.0.simg",
-        "singularity_command_options" : "--bind /scratch,/lscratch,/oak/stanford"
-    }
-}
-```
-
-The default SLURM partition is `normal`. If you want to use some other partition, as you probably will when running a full sized experiment, add `"slurm_partition"` line in the workflow options. After this addition your `workflow_opts/sherlock.json` looks like this:
-
-```
-{
-    "default_runtime_attributes" : {
-        "singularity_container" : "~/.singularity/rna-seq-pipeline-v1.0.simg",
-        "slurm_partition" : "SLURM_PARTITION"
-        "singularity_command_options" : "--bind /scratch,/lscratch,/oak/stanford"
-    }
-}
-```
-
-7. Run the pipeline:
-
-```bash
-  $ java -jar -Dconfig.file=backends/backend.conf -Dbackend.default=slurm_singularity cromwell-34.jar run rna-seq-pipeline.wdl -i test/test_workflow/PE_stranded_input.json -o workflow_opts/sherlock.json
-```
-
-8. See the outputs in `cromwell-executions/rna/[RUNHASH]`.
+4. See the outputs in `~/rna-seq-pipeline/cromwell-executions/rna/[RUNHASH]`.
 
 # SLURM
 
