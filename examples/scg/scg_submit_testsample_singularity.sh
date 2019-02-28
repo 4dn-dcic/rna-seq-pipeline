@@ -35,7 +35,7 @@ module load java || true
 # make an input JSON for your own sample
 # start from any of two templates for single-ended and paired-ended samples
 # (examples/template_se.json, examples/template_pe.json)
-INPUT=examples/scg/sct_testsample_input.json
+INPUT=examples/scg/scg_testsample_input.json
 
 # If this pipeline fails, then use this metadata JSON file to resume a failed pipeline from where it left 
 # See details in /utils/resumer/README.md
