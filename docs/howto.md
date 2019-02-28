@@ -11,7 +11,7 @@ Before following these instructions, make sure you have completed installation a
 [Local with Docker](howto.md#local-with-docker)  
 [DNAnexus](howto.md#dnanexus)  
 [Local with Singularity](howto.md#local-with-singularity)  
-[Sherlock with Singularity](howto.md#sherlock-with-singularity)  
+[SCG4 with Singularity](howto.md#stanford-scg4-with-singularity)  
 [SLURM](howto.md#slurm)
 
 ## Building indexes
