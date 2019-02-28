@@ -318,11 +318,17 @@ The singularity image and necessary reference files are stored in `/reference/EN
 3. Run the pipeline by submitting the script located in `~/rna-seq-pipeline/examples/scg/`:
 
 ```bash
-  cd ~/rna-seq-pipeline
-  sbatch -A [YOUR SCG4 PAID ACCOUNT] examples/scg/scg_submit_testsample_singularity.sh
+  $ cd ~/rna-seq-pipeline
+  $ sbatch -A [YOUR SCG4 PAID ACCOUNT] examples/scg/scg_submit_testsample_singularity.sh
 ```
 
-4. See the outputs in `~/rna-seq-pipeline/cromwell-executions/rna/[RUNHASH]`.
+4. You can follow the progress of the job by:
+
+```bash
+  $ squeue -u $USER
+```
+
+5. See the outputs in `~/rna-seq-pipeline/cromwell-executions/rna/[RUNHASH]`. Pipeline runs in about 6 minutes, and produces additional information about the execution in `metadata.json`.
 
 # SLURM
 
