@@ -20,7 +20,7 @@
 
 # max number of cpus for each pipeline
 # should be >= NUM_CONCURRENT_TASK x "rna.align_ncpus"
-#            + NUM_CONCURRENT_TASK x "rna.kallisto_ncpus"
+#            + NUM_CONCURRENT_TASK x "rna.kallisto_number_of_threads"
 # in input JSON file. This is the worst case maximum number
 # of cpus the pipeline may use. 
 #SBATCH --cpus-per-task=2

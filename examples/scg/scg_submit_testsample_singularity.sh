@@ -7,7 +7,7 @@
 
 # job name for pipeline
 # this name will appear when you monitor jobs with "squeue -u $USER"
-#SBATCH --job-name=RNA-SEQ
+#SBATCH --job-name=RNA-SEQ-testsample
 # walltime for your job
 # give long time enough to finish your pipeline
 #SBATCH --time=12:00:00
@@ -20,10 +20,10 @@
 
 # max number of cpus for each pipeline
 # should be >= NUM_CONCURRENT_TASK x "rna.align_ncpus"
-#            + NUM_CONCURRENT_TASK x "rna.kallisto_ncpus"
+#            + NUM_CONCURRENT_TASK x "rna.kallisto_number_of_threads"
 # in input JSON file. This is the worst case maximum number
 # of cpus the pipeline may use. 
-#SBATCH --cpus-per-task=2
+#SBATCH --cpus-per-task=8
 
 # email notification for job status
 #SBATCH --mail-type=END,FAIL
@@ -35,7 +35,7 @@ module load java || true
 # make an input JSON for your own sample
 # start from any of two templates for single-ended and paired-ended samples
 # (examples/template_se.json, examples/template_pe.json)
-INPUT=
+INPUT=examples/scg/sct_testsample_input.json
 
 # If this pipeline fails, then use this metadata JSON file to resume a failed pipeline from where it left 
 # See details in /utils/resumer/README.md
