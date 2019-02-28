@@ -1,43 +1,41 @@
 #!/bin/bash
 
 # do not touch these settings
-#  number of tasks and nodes are fixed at 1
+# number of tasks and nodes are fixed at 1
 #SBATCH -n 1
 #SBATCH --ntasks-per-node=1
 
 # job name for pipeline
-#  this name will appear when you monitor jobs with "squeue -u $USER"
-#SBATCH --job-name=RNA-TEST
-
+# this name will appear when you monitor jobs with "squeue -u $USER"
+#SBATCH --job-name=RNA-SEQ
 # walltime for your job
-#  give long time enough to finish your pipeline
+# give long time enough to finish your pipeline
 #SBATCH --time=12:00:00
 
 # total amount of memory
-#  depends on the size of your FASTQs
-#  do not request too much memory
-#  cluster will not accept your job
+# depends on the size of your FASTQs
+# do not request too much memory
+# cluster will not accept your job
 #SBATCH --mem=20G
 
 # max number of cpus for each pipeline
-#  should be >= NUM_CONCURRENT_TASK x "atac.star" in input JSON file
-#  since star is a bottlenecking task in the pipeline
-#  "rna.align_ncpus" is a number of cpus per replicate
+# should be >= NUM_CONCURRENT_TASK x "rna.align_ncpus"
+#            + NUM_CONCURRENT_TASK x "rna.kallisto_ncpus"
+# in input JSON file. This is the worst case maximum number
+# of cpus the pipeline may use. 
 #SBATCH --cpus-per-task=2
 
 # email notification for job status
 #SBATCH --mail-type=END,FAIL
 
 # load java module if it exists
-module load java
+module load java || true
 
 # use input JSON for a small test sample
-#  you make an input JSON for your own sample
-#  start from any of two templates for single-ended and paired-ended samples
-#  (examples/template_se.json, examples/template_pe.json)
-#  do not use an input JSON file for a test sample (ENCSR356KRQ)
-#  it's a sample with multimapping reads
-INPUT=examples/scg/ENCSR356KRQ_subsampled_scg.json
+# make an input JSON for your own sample
+# start from any of two templates for single-ended and paired-ended samples
+# (examples/template_se.json, examples/template_pe.json)
+INPUT=
 
 # If this pipeline fails, then use this metadata JSON file to resume a failed pipeline from where it left 
 # See details in /utils/resumer/README.md
