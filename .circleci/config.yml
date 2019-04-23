@@ -34,6 +34,18 @@ get_kallisto_index: &get_kallisto_index
   command: |
     curl https://storage.googleapis.com/star-rsem-runs/reference-genomes/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx -o test_data/Homo_sapiens.GRCh38.cdna.all.chr19_ERCC_phix_k31_kallisto.idx
 
+install_go: &install_go
+  name: install go language
+  command: |
+    sudo apt-get update
+    wget https://dl.google.com/go/go1.12.2.linux-amd64.tar.gz
+    sudo tar -xvf go1.12.2.linux-amd64.tar.gz
+    sudo mv go /usr/local
+    export GOROOT=/usr/local/go
+    export GOPATH=$HOME/go
+    export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
+    go version
+
 install_singularity: &install_singularity
   name: install singularity
   command: |
@@ -137,6 +149,7 @@ jobs:
     <<: *machine_defaults
     steps:
       - checkout
+      - run: *install_go
       - run: *install_singularity
       - run: *make_tag
       - run: *get_star_index
@@ -155,6 +168,7 @@ jobs:
     <<: *machine_defaults
     steps:
       - checkout
+      - run: *install_go
       - run: *install_singularity
       - run: *make_tag
       - run: *get_star_index
@@ -173,6 +187,7 @@ jobs:
     <<: *machine_defaults
     steps:
       - checkout
+      - run: *install_go
       - run: *install_singularity
       - run: *make_tag
       - run: *get_star_index
