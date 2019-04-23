@@ -64,6 +64,30 @@ install_singularity: &install_singularity
     make
     sudo make install
     singularity --version
+
+install_singularity3: &install_singularity3
+  name: install singularity 3.1
+  command: |
+    if [[ $EUID == 0 ]]; then export SUDO=""; else export SUDO="sudo"; fi
+    $SUDO apt-get install -y build-essential \
+                             squashfs-tools \
+                             libtool \
+                             uuid-dev \
+                             libssl-dev \
+                             libgpgme11-dev \
+                             libseccomp-dev \
+                             pkg-config
+    export GOPATH=/go
+    export PATH=/tmp/go/bin:$PATH
+    go get -u github.com/golang/dep/cmd/dep && \
+    mkdir -p ${GOPATH}/src/github.com/sylabs && \
+    cd ${GOPATH}/src/github.com/sylabs && \
+    wget https://github.com/sylabs/singularity/releases/download/v3.1.0/singularity-3.1.0.tar.gz && \
+    tar -xzvf singularity-3.1.0.tar.gz && \
+    cd singularity && \
+    ./mconfig -p /usr/local && \
+    make -C builddir && \
+    $SUDO make -C builddir install
 # Jobs
 version: 2
 jobs:
@@ -150,8 +174,7 @@ jobs:
     <<: *machine_defaults
     steps:
       - checkout
-      - run: *install_go
-      - run: *install_singularity
+      - run: *install_singularity3
       - run: *make_tag
       - run: *get_star_index
       - run: *get_kallisto_index
@@ -170,8 +193,7 @@ jobs:
     <<: *machine_defaults
     steps:
       - checkout
-      - run: *install_go
-      - run: *install_singularity
+      - run: *install_singularity3
       - run: *make_tag
       - run: *get_star_index
       - run: *get_kallisto_index
@@ -190,8 +212,7 @@ jobs:
     <<: *machine_defaults
     steps:
       - checkout
-      - run: *install_go
-      - run: *install_singularity
+      - run: *install_singularity3
       - run: *make_tag
       - run: *get_star_index
       - run: *get_kallisto_index
