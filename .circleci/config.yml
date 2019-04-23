@@ -40,6 +40,7 @@ install_go: &install_go
     sudo apt-get update
     wget https://dl.google.com/go/go1.12.2.linux-amd64.tar.gz
     sudo tar -xvf go1.12.2.linux-amd64.tar.gz
+    sudo rm -rf /usr/local/go
     sudo mv go /usr/local
     export GOROOT=/usr/local/go
     export GOPATH=$HOME/go
@@ -149,6 +150,7 @@ jobs:
     <<: *machine_defaults
     steps:
       - checkout
+      - run: *install_go
       - run: *install_singularity
       - run: *make_tag
       - run: *get_star_index
@@ -168,6 +170,7 @@ jobs:
     <<: *machine_defaults
     steps:
       - checkout
+      - run: *install_go
       - run: *install_singularity
       - run: *make_tag
       - run: *get_star_index
@@ -187,6 +190,7 @@ jobs:
     <<: *machine_defaults
     steps:
       - checkout
+      - run: *install_go
       - run: *install_singularity
       - run: *make_tag
       - run: *get_star_index
