@@ -149,13 +149,13 @@ jobs:
     <<: *machine_defaults
     steps:
       - checkout
-      - run: *install_go
       - run: *install_singularity
       - run: *make_tag
       - run: *get_star_index
       - run: *get_kallisto_index
       - run:
           command: |
+            go version
             pyenv global 3.5.2
             source ${BASH_ENV}
             test/test_workflow/test.sh rna-seq-pipeline.wdl test/test_workflow/PE_unstranded_input.json $TAG singularity
@@ -168,13 +168,13 @@ jobs:
     <<: *machine_defaults
     steps:
       - checkout
-      - run: *install_go
       - run: *install_singularity
       - run: *make_tag
       - run: *get_star_index
       - run: *get_kallisto_index
       - run:
           command: |
+            go version
             pyenv global 3.5.2
             source ${BASH_ENV}
             test/test_workflow/test.sh rna-seq-pipeline.wdl test/test_workflow/SE_unstranded_input.json $TAG singularity
@@ -187,13 +187,13 @@ jobs:
     <<: *machine_defaults
     steps:
       - checkout
-      - run: *install_go
       - run: *install_singularity
       - run: *make_tag
       - run: *get_star_index
       - run: *get_kallisto_index
       - run:
           command: |
+            go version
             pyenv global 3.5.2
             source ${BASH_ENV}
             test/test_workflow/test.sh rna-seq-pipeline.wdl test/test_workflow/PE_stranded_input.json $TAG singularity
