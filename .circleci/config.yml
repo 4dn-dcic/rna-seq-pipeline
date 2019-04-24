@@ -42,10 +42,9 @@ install_go: &install_go
     sudo tar -xvf go1.12.2.linux-amd64.tar.gz
     sudo rm -rf /usr/local/go
     sudo mv go /usr/local
-    export GOROOT=/usr/local/go
-    export GOPATH=$HOME/go
-    export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
-    go version
+    echo "export GOROOT=/usr/local/go" > ${BASH_ENV}
+    echo "export GOPATH=$HOME/go" > ${BASH_ENV}
+    echo "export PATH=$GOPATH/bin:$GOROOT/bin:$PATH" >${BASH_ENV}
 
 install_singularity: &install_singularity
   name: install singularity
@@ -68,6 +67,7 @@ install_singularity: &install_singularity
 install_singularity3: &install_singularity3
   name: install singularity 3.1
   command: |
+    source ${BASH_ENV}
     sudo env PATH=$PATH
     sudo apt-get update 
     sudo apt-get install -y build-essential \
