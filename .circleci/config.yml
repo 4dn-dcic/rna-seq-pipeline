@@ -68,8 +68,15 @@ install_singularity: &install_singularity
 install_singularity3: &install_singularity3
   name: install singularity 3.1
   command: |
-    if [[ $EUID == 0 ]]; then export SUDO=""; else export SUDO="sudo"; fi
-    $SUDO apt-get install -y build-essential \
+    sudo apt-get update
+    wget https://dl.google.com/go/go1.12.2.linux-amd64.tar.gz
+    sudo tar -xvf go1.12.2.linux-amd64.tar.gz
+    sudo rm -rf /usr/local/go
+    sudo mv go /usr/local
+    export GOROOT=/usr/local/go
+    export GOPATH=$HOME/go
+    export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
+    sudo apt-get install -y build-essential \
                              squashfs-tools \
                              libtool \
                              uuid-dev \
@@ -77,8 +84,6 @@ install_singularity3: &install_singularity3
                              libgpgme11-dev \
                              libseccomp-dev \
                              pkg-config
-    export GOPATH=/go
-    export PATH=/tmp/go/bin:$PATH
     sudo go get -u github.com/golang/dep/cmd/dep && \
     sudo mkdir -p ${GOPATH}/src/github.com/sylabs && \
     sudo cd ${GOPATH}/src/github.com/sylabs && \
