@@ -68,6 +68,7 @@ install_singularity: &install_singularity
 install_singularity3: &install_singularity3
   name: install singularity 3.1
   command: |
+    sudo env PATH=$PATH
     sudo apt-get update 
     sudo apt-get install -y build-essential \
                              squashfs-tools \
@@ -179,7 +180,6 @@ jobs:
       - run: *get_kallisto_index
       - run:
           command: |
-            go version
             pyenv global 3.5.2
             source ${BASH_ENV}
             test/test_workflow/test.sh rna-seq-pipeline.wdl test/test_workflow/PE_unstranded_input.json $TAG singularity
@@ -199,7 +199,6 @@ jobs:
       - run: *get_kallisto_index
       - run:
           command: |
-            go version
             pyenv global 3.5.2
             source ${BASH_ENV}
             test/test_workflow/test.sh rna-seq-pipeline.wdl test/test_workflow/SE_unstranded_input.json $TAG singularity
@@ -219,7 +218,6 @@ jobs:
       - run: *get_kallisto_index
       - run:
           command: |
-            go version
             pyenv global 3.5.2
             source ${BASH_ENV}
             test/test_workflow/test.sh rna-seq-pipeline.wdl test/test_workflow/PE_stranded_input.json $TAG singularity
