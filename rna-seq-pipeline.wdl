@@ -37,14 +37,6 @@ workflow rna {
     String? libraryid
     String? align_disk
 
-    # KALLISTO
-
-    Int kallisto_number_of_threads
-    Int kallisto_ramGB
-    File kallisto_index
-    Int? kallisto_fragment_length
-    Float? kallisto_sd_of_fragment_length
-    String? kallisto_disk
     
     # BAM_TO_SIGNALS
 
@@ -108,21 +100,6 @@ workflow rna {
             ncpus = rsem_ncpus,
             ramGB = rsem_ramGB,
             disks = rsem_disk,
-        }
-    }
-
-    scatter (i in range(length(fastqs_))) {
-        call kallisto { input:
-            fastqs = fastqs_[i],
-            endedness = endedness,
-            strandedness_direction = strandedness_direction,
-            kallisto_index = kallisto_index,
-            number_of_threads = kallisto_number_of_threads,
-            ramGB = kallisto_ramGB,
-            fragment_length = kallisto_fragment_length,
-            sd_of_fragment_length = kallisto_sd_of_fragment_length,
-            disks = kallisto_disk,
-            out_prefix = "rep"+(i+1)+bamroot,
         }
     }
 
