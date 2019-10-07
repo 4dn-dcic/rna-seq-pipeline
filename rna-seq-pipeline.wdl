@@ -13,10 +13,10 @@ workflow rna {
     # corresponding to fastqs_R1
     Array[File] fastqs_R2 = [] 
     # aligner: star for now, more added if/when needed
-    String aligner
+    String aligner = "star"
     # bamroot: root name for output bams. For example foo_bar will
     # create foo_bar_genome.bam and foo_bar_anno.bam
-    String bamroot 
+    String bamroot = "out"
     # strandedness: is the library strand specific (stranded or unstranded)
     String strandedness 
     # strandedness_direction (forward, reverse, unstranded)
@@ -24,13 +24,16 @@ workflow rna {
     # chrom_sizes: chromosome sizes file
     File chrom_sizes 
 
+    int cpu
+    int memGB
+
     ## task level variables that are defined globally to make them visible to DNANexus UI
 
     # ALIGN
     # index: aligner index (tar.gz)
     File align_index
-    Int align_ncpus
-    Int align_ramGB
+    Int align_ncpus = cpu
+    Int align_ramGB = memGB
     # indexdir: where to extract the star index, relative to cwd
     String? indexdir
     # libraryid: identifier which will be added to bam headers
@@ -40,8 +43,8 @@ workflow rna {
     
     # BAM_TO_SIGNALS
 
-    Int bam_to_signals_ncpus
-    Int bam_to_signals_ramGB
+    Int bam_to_signals_ncpus = cpu
+    Int bam_to_signals_ramGB = memGB
     String? bam_to_signals_disk
     
     # RSEM_QUANT
@@ -50,8 +53,8 @@ workflow rna {
     File rsem_index
     # rnd_seed: random seed used for rsem
     Int rnd_seed = 12345
-    Int rsem_ncpus
-    Int rsem_ramGB
+    Int rsem_ncpus = cpu
+    Int rsem_ramGB = memGB
     String? rsem_disk
     
     # RNA_QC
