@@ -123,11 +123,11 @@ workflow rna {
     }
 
     output {
-        File outbam = align[0].genomebam
-        File outbw = bam_to_signals[0].unique[0]
-        File gene_expression = rsem_quant[0].genes_results
-        File isoform_expression = rsem_quant[0].isoforms_results
-        File qc_json = rna_qc[0].rnaQC
+        File outbam = align.genomebam[0]
+        File outbw = bam_to_signals.unique[0][0]
+        File gene_expression = rsem_quant.genes_results[0]
+        File isoform_expression = rsem_quant.isoforms_results[0]
+        File qc_json = rna_qc.rnaQC[0]
     }
 }
 
