@@ -121,6 +121,14 @@ workflow rna {
             disks = rna_qc_disk,
         }
     }
+
+    output {
+        File outbam = rna.align[0].genomebam
+        File outbw = rna.bam_to_signals[0].unique[0]
+        File gene_expression = rna.rsem_quant.genes_results
+        File isoform_expression = rna.rsem_quant.isoforms_results
+        File qc_json = rna.rna_qc.rnaQC
+    }
 }
 
 
