@@ -23,8 +23,8 @@ workflow rna {
     # chrom_sizes: chromosome sizes file
     File chrom_sizes
 
-    int cpu
-    int memGB
+    Int cpu
+    Int memGB
 
     ## task level variables that are defined globally to make them visible to DNANexus UI
 
