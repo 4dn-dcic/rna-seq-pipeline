@@ -122,6 +122,9 @@ workflow rna {
         File outbw = bam_to_signals.unique[0][0]
         File gene_expression = rsem_quant.genes_results[0]
         File isoform_expression = rsem_quant.isoforms_results[0]
+        File genome_flagstat_qc_json = align.genome_flagstat[0]
+        File anno_flagstat_qc_json = align.anno_flagstat[0]
+        File align_log_json = align.log_json[0]
         File qc_json = rna_qc.rnaQC[0]
     }
 }
