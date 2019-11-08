@@ -117,13 +117,24 @@ workflow rna {
         }
     }
 
+
+    if(strandedness == 'unstranded'){
+        File? unstranded_bw = bam_to_signals.unique[0][0]
+    }
+    if(strandedness != 'unstranded'){
+        File? minus_bw = bam_to_signals.unique[0][0]
+        File? plus_bw = bam_to_signals.unique[0][1]
+    }
+    
     output {
         File outbam = align.genomebam[0]
-        File outbw = bam_to_signals.unique[0][0]
+        File outbw = select_first([unstranded_bw, ''])
+        File minusbw = select_first([minus_bw, ''])
+        File plusbw = select_first([plus_bw, ''])
         File gene_expression = rsem_quant.genes_results[0]
         File isoform_expression = rsem_quant.isoforms_results[0]
-        File genome_flagstat_qc_json = align.genome_flagstat[0]
-        File anno_flagstat_qc_json = align.anno_flagstat[0]
+        File genome_flagstat_qc_json = align.genome_flagstat_json[0]
+        File anno_flagstat_qc_json = align.anno_flagstat_json[0]
         File align_log_json = align.log_json[0]
         File qc_json = rna_qc.rnaQC[0]
     }
