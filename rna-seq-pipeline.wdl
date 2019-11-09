@@ -178,6 +178,7 @@ task align {
       cpu: ncpus
       memory: "${ramGB} GB"
       disks : select_first([disks,"local-disk 100 SSD"])
+      docker: quay.io/encode-dcc/rna-seq-pipeline:v1.1
     }
 }
 
@@ -209,6 +210,7 @@ task  bam_to_signals {
         cpu: ncpus
         memory: "${ramGB} GB"
         disks : select_first([disks,"local-disk 100 SSD"])
+        docker: quay.io/encode-dcc/rna-seq-pipeline:v1.1
     }
 }
 
@@ -244,6 +246,7 @@ task rsem_quant {
         cpu: ncpus
         memory: "${ramGB} GB"
         disks : select_first([disks,"local-disk 100 SSD"])
+        docker: quay.io/encode-dcc/rna-seq-pipeline:v1.1
     }
 }
 
@@ -282,6 +285,7 @@ task kallisto {
         cpu: number_of_threads
         memory: "${ramGB} GB"
         disks: select_first([disks, "local-disk 100 SSD"])
+        docker: quay.io/encode-dcc/rna-seq-pipeline:v1.1
     }
 }
 
@@ -307,6 +311,7 @@ task mad_qc {
         cpu: 2
         memory: "3400 MB"
         disks: select_first([disks,"local-disk 100 SSD"])
+        docker: quay.io/encode-dcc/rna-seq-pipeline:v1.1
     }
 }
 
@@ -332,5 +337,6 @@ task rna_qc {
         cpu: 2
         memory: "1024 MB"
         disks: select_first([disks, "local-disk 100 SSD"])
+        docker: quay.io/encode-dcc/rna-seq-pipeline:v1.1
     }
 }
