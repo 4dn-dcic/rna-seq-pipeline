@@ -1,5 +1,6 @@
 # ENCODE DCC RNA-seq pipeline
 # Maintainer: Otto Jolanki
+# Modified for 4DN by Soo Lee
 
 #CAPER docker quay.io/encode-dcc/rna-seq-pipeline:v1.1
 #CAPER singularity docker://quay.io/encode-dcc/rna-seq-pipeline:v1.1
