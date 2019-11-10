@@ -13,7 +13,7 @@ workflow rna {
     Array[Array[File]] fastqs_R1
     # fastqs_R2: fastq.gz files for Read2 (omit if single-ended) in order
     # corresponding to fastqs_R1
-    Array[Array[File]] fastqs_R2 = [[]]
+    Array[Array[File]] fastqs_R2 = []
     # bamroot: root name for output bams. For example foo_bar will
     # create foo_bar_genome.bam and foo_bar_anno.bam
     String bamroot = "out"
