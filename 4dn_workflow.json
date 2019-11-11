@@ -46,14 +46,6 @@
                 "workflow_argument_name": "rna.strandedness_direction"
             },
             {
-                "argument_type": "parameter",
-                "workflow_argument_name": "rna.cpu"
-            },
-            {
-                "argument_type": "parameter",
-                "workflow_argument_name": "rna.memGB"
-            },
-            {
                 "argument_format": "bam",
                 "argument_type": "Output processed file",
                 "workflow_argument_name": "rna.outbam"
