@@ -1,6 +1,6 @@
     {
-        "accession": "4DNWFVG24S9",
-        "app_name": "encode-rnaseq",
+        "accession": "4DNWFBJ47YR",
+        "app_name": "encode-rnaseq-unstranded",
         "app_version": "1.1",
         "arguments": [
             {
@@ -54,16 +54,6 @@
                 "argument_format": "bw",
                 "argument_type": "Output processed file",
                 "workflow_argument_name": "rna.outbw"
-            },
-            {
-                "argument_format": "bw",
-                "argument_type": "Output processed file",
-                "workflow_argument_name": "rna.plusbw"
-            },
-            {
-                "argument_format": "bw",
-                "argument_type": "Output processed file",
-                "workflow_argument_name": "rna.minusbw"
             },
             {
                 "argument_format": "tsv",
@@ -528,6 +518,6 @@
                 ]
             }
         ],
-        "title": "RNA-seq data processing pipeline, 1.1",
-        "uuid": "213c51ef-80ee-4ef9-8c86-dec5460c15e8"
+        "title": "RNA-seq data processing pipeline, unstranded, 1.1",
+        "uuid": "37458aca-8319-4e06-9cf2-da770f1a6252"
     }
