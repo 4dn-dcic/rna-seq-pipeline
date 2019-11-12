@@ -107,7 +107,7 @@
         "docker_registry_url": "https://hub.docker.com/",
         "lab": "4dn-dcic-lab",
         "name": "encode-rnaseq",
-        "aliases": ["4dn-dcic-lab:wf-encode-rnaseq"],
+        "aliases": ["4dn-dcic-lab:wf-encode-rnaseq-unstranded"],
         "steps": [
             {
                 "inputs": [
