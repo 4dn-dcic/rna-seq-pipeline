@@ -67,14 +67,14 @@
             },
             {
                 "argument_type": "Output QC file",
-                "workflow_argument_name": "rna.anno_flagstat_json",
+                "workflow_argument_name": "rna.anno_flagstat_qc_json",
                 "qc_type": "quality_metric_rnaseq",
                 "argument_to_be_attached_to": "rna.gene_expression",
                 "qc_json": true
             },
             {
                 "argument_type": "Output QC file",
-                "workflow_argument_name": "rna.genome_flagstat_json",
+                "workflow_argument_name": "rna.genome_flagstat_qc_json",
                 "qc_type": "quality_metric_rnaseq",
                 "argument_to_be_attached_to": "rna.outbam",
                 "qc_json": true
