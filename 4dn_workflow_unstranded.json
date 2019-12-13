@@ -96,14 +96,14 @@
         ],
         "award": "1U01CA200059-01",
         "wdl_child_filenames": [],
-        "wdl_directory_url": "https://raw.githubusercontent.com/4dn-dcic/rna-seq-pipeline/v1.1/",
+        "wdl_directory_url": "https://raw.githubusercontent.com/4dn-dcic/rna-seq-pipeline/v1.1_dcic/",
         "wdl_main_filename": "rna-seq-pipeline.wdl",
         "workflow_language": "WDL",
         "experiment_types": [
             "RNA-seq"
         ],
         "description": "RNA-seq data processing pipeline",
-        "docker_image_name": "quay.io/encode-dcc/rna-seq-pipeline:v1.1",
+        "docker_image_name": "4dndcic/encode-rnaseq:v1.1_dcic",
         "docker_registry_url": "https://hub.docker.com/",
         "lab": "4dn-dcic-lab",
         "name": "encode-rnaseq",
