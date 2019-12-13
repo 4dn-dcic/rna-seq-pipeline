@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
 Script to run madQC step in ENCODE rna-seq-pipeline
+Modified by Clara Bakker 12/13/2019
 """
 
 __author__ = "Otto Jolanki"
@@ -38,38 +39,99 @@ def remove_quantfile_extensions(quant_fn):
     else:
         return quant_fn[:first_extension_start_index]
 
+# begin the html output file
+def gen_html(pfile):
+    with open(pfile, "w") as f:
+        htmltxt = """
+<html>
+    <head>
+        <title>RNA-seq QC</title>
+    </head>
+    <body>
+        <h1></h1>
+        <p></p>
+        <h2>RNA-seq MA Plot Quality Control</h2>
+        <p>
+        <p>
+"""
+        f.write(htmltxt)
+        f.close()
+
+
 
 def main(args):
-    run_cmd = MADQC_CMD.format(
-        path_to_madR=args.MAD_R_path, quants_1=args.quants1, quants_2=args.quants2
-    )
-    quant_basename1 = remove_quantfile_extensions(os.path.basename(args.quants1))
-    quant_basename2 = remove_quantfile_extensions(os.path.basename(args.quants2))
-    plot_output_filename = "{basename_1}-{basename_2}_mad_plot.png".format(
-        basename_1=quant_basename1, basename_2=quant_basename2
-    )
-    # capture the output string from the run
-    logger.info("Running madQC command %s", run_cmd)
-    mad_output = subprocess.check_output(shlex.split(run_cmd))
-    os.rename("MAplot.png", plot_output_filename)
-    qc_record = QCMetricRecord()
-    mad_r_metric = json.loads(mad_output.decode())
-    mad_r_metric_obj = QCMetric("MAD.R", mad_r_metric)
-    qc_record.add(mad_r_metric_obj)
-    qc_output_fn = "{basename_1}-{basename_2}_mad_qc_metrics.json".format(
-        basename_1=quant_basename1, basename_2=quant_basename2
-    )
-    with open(qc_output_fn, "w") as f:
-        json.dump(qc_record.to_ordered_dict(), f)
+    names = args.quants
+    if names is None or len(names) == 1:
+        logger.warning("Requires more than one quantification file")
+        quit()
+
+    names[:] = [remove_quantfile_extensions(os.path.basename(q)) for q in names]
+    filepairs = [(names[f1], names[f2]) for f1 in range(len(names)) for f2 in range(f1+1,len(names))]
+
+    # generate filename
+    qc_output_fn = names[0]
+    for i in range(1,len(names)):
+        qc_output_fn += "-{basename_x}".format(
+            basename_x=names[i]
+        )
+
+    allpngs = qc_output_fn + ".html"
+    gen_html(allpngs)
+    qc_output_fn += "_mad_qc_metrics.json"
+
+    # overwrite existing JSON file
+    open(qc_output_fn,"w+")
+
+    # run R script for unique pairs
+    for fpair in filepairs:
+        run_cmd = MADQC_CMD.format(
+            path_to_madR=args.MAD_R_path, quants_1=fpair[0]+".tsv", quants_2=fpair[1]+".tsv"
+        )
+        plot_output_filename = "test_{basename_1}-{basename_2}_mad_plot.png".format(
+            basename_1=fpair[0], basename_2=fpair[1]
+        )
+        with open(allpngs, "a+") as f:
+            htmltxt = """\n\t\t<br>\n\t\t<h3>{pngt1} {pngt2} MAD Plot:</h3>
+\t\t<img class=\"indented\" src=\"{pngfile}\"alt=\"Test Alt\" width=\"500\" height=\"500\">\n""".format(
+                pngt1=fpair[0], pngt2=fpair[1], pngfile=plot_output_filename
+            )
+            f.write(htmltxt)
+
+        # capture the output string from the run
+        logger.info("Running madQC command %s", run_cmd)
+        mad_output = subprocess.check_output(shlex.split(run_cmd))
+        os.rename("MAplot.png", plot_output_filename)
+        qc_record = QCMetricRecord()
+        mad_r_metric = json.loads(mad_output.decode())
+        descrip = "MAD.R for " + fpair[0] + " and " + fpair[1]
+        mad_r_metric_obj = QCMetric(descrip, mad_r_metric)
+        qc_record.add(mad_r_metric_obj)
+
+        with open(qc_output_fn, "a+") as f1, open(allpngs, "a+") as f2: 
+            # record to JSON
+            json.dump(qc_record.to_ordered_dict(), f1, indent=2)
+
+            # record to HTML
+            f2.write("\n\t\t<table border=\"1\" width=300>")
+            for k,v in mad_r_metric.items():
+                line = "\n\t\t\t<tr>\n\t\t\t\t<td>{key}</td>\n\t\t\t\t<td>{val}</td>\n\t\t\t</tr>".format(
+                    key=k, val=v
+                )
+                f2.write(line)
+            f2.write("\n\t\t</table>")
+            f2.write("\n\t\t<br>")
+
+    # generate html summary
+    with open(allpngs, "a+") as f:
+        htmltxt="""\n\t</body>
+</html>"""
+        f.write(htmltxt)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--quants1", type=str, help="first quantification file from RSEM"
-    )
-    parser.add_argument(
-        "--quants2", type=str, help="second quantification file from RSEM"
+        "--quants", nargs='+', help="all quantification files from RSEM"
     )
     parser.add_argument("--MAD_R_path", type=str, help="path to MAD.R")
     args = parser.parse_args()
