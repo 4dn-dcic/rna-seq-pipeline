@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Script to run madQC step in ENCODE rna-seq-pipeline
-Modified by Clara Bakker 12/13/2019
+Modified by Clara Bakker 12/18/2019
 """
 
 __author__ = "Otto Jolanki"
@@ -50,7 +50,7 @@ def gen_html(pfile):
     <body>
         <h1></h1>
         <p></p>
-        <h2>RNA-seq MA Plot Quality Control</h2>
+        <h2>RNA-seq MAD Plot Quality Control</h2>
         <p>
         <p>
 """
@@ -60,19 +60,19 @@ def gen_html(pfile):
 
 
 def main(args):
-    names = args.quants
-    if names is None or len(names) == 1:
+    qnames = args.quants
+    if qnames is None or len(qnames) == 1:
         logger.warning("Requires more than one quantification file")
         quit()
 
-    names[:] = [remove_quantfile_extensions(os.path.basename(q)) for q in names]
+    names = [(a, remove_quantfile_extensions(os.path.basename(a))) for a in qnames]
     filepairs = [(names[f1], names[f2]) for f1 in range(len(names)) for f2 in range(f1+1,len(names))]
 
     # generate filename
-    qc_output_fn = names[0]
+    qc_output_fn = names[0][1]
     for i in range(1,len(names)):
         qc_output_fn += "-{basename_x}".format(
-            basename_x=names[i]
+            basename_x=names[i][1]
         )
 
     allpngs = qc_output_fn + ".html"
@@ -83,17 +83,19 @@ def main(args):
     open(qc_output_fn,"w+")
 
     # run R script for unique pairs
+    # fpair[x][0] is the full file path, fpair[x][1] is the accession only 
     for fpair in filepairs:
         run_cmd = MADQC_CMD.format(
-            path_to_madR=args.MAD_R_path, quants_1=fpair[0]+".tsv", quants_2=fpair[1]+".tsv"
+            path_to_madR=args.MAD_R_path, quants_1=fpair[0][0], quants_2=fpair[1][0],
         )
-        plot_output_filename = "test_{basename_1}-{basename_2}_mad_plot.png".format(
-            basename_1=fpair[0], basename_2=fpair[1]
+
+        plot_output_filename = "{basename_1}-{basename_2}_mad_plot.png".format(
+            basename_1=fpair[0][1], basename_2=fpair[1][1]
         )
         with open(allpngs, "a+") as f:
             htmltxt = """\n\t\t<br>\n\t\t<h3>{pngt1} {pngt2} MAD Plot:</h3>
 \t\t<img class=\"indented\" src=\"{pngfile}\"alt=\"Test Alt\" width=\"500\" height=\"500\">\n""".format(
-                pngt1=fpair[0], pngt2=fpair[1], pngfile=plot_output_filename
+                pngt1=fpair[0][1], pngt2=fpair[1][1], pngfile=plot_output_filename
             )
             f.write(htmltxt)
 
@@ -103,7 +105,7 @@ def main(args):
         os.rename("MAplot.png", plot_output_filename)
         qc_record = QCMetricRecord()
         mad_r_metric = json.loads(mad_output.decode())
-        descrip = "MAD.R for " + fpair[0] + " and " + fpair[1]
+        descrip = "MAD.R for " + fpair[0][1] + " and " + fpair[1][1]
         mad_r_metric_obj = QCMetric(descrip, mad_r_metric)
         qc_record.add(mad_r_metric_obj)
 
@@ -121,7 +123,7 @@ def main(args):
             f2.write("\n\t\t</table>")
             f2.write("\n\t\t<br>")
 
-    # generate html summary
+    # finish html summary
     with open(allpngs, "a+") as f:
         htmltxt="""\n\t</body>
 </html>"""
