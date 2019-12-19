@@ -16,6 +16,7 @@ import shlex
 import subprocess
 
 from rna_qc import QCMetric, QCMetricRecord
+from zipfile import ZipFile
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -82,6 +83,9 @@ def main(args):
     # overwrite existing JSON file
     open(qc_output_fn,"w+")
 
+    # create zipfile for output
+    zippy = ZipFile("mad_qc_report.zip", 'w')
+
     # run R script for unique pairs
     # fpair[x][0] is the full file path, fpair[x][1] is the accession only 
     for fpair in filepairs:
@@ -111,11 +115,12 @@ def main(args):
 
         with open(qc_output_fn, "a+") as f1, open(allpngs, "a+") as f2: 
             # record to JSON
-            json.dump(qc_record.to_ordered_dict(), f1, indent=2)
+            ord_record = qc_record.to_ordered_dict()
+            json.dump(ord_record, f1, indent=2)
 
             # record to HTML
             f2.write("\n\t\t<table border=\"1\" width=300>")
-            for k,v in mad_r_metric.items():
+            for k,v in ord_record.get(descrip).items():
                 line = "\n\t\t\t<tr>\n\t\t\t\t<td>{key}</td>\n\t\t\t\t<td>{val}</td>\n\t\t\t</tr>".format(
                     key=k, val=v
                 )
@@ -123,11 +128,21 @@ def main(args):
             f2.write("\n\t\t</table>")
             f2.write("\n\t\t<br>")
 
+        # add png files to zip, remove extra copy
+        zippy.write(plot_output_filename)
+        os.remove(plot_output_filename)
+
     # finish html summary
     with open(allpngs, "a+") as f:
         htmltxt="""\n\t</body>
 </html>"""
         f.write(htmltxt)
+
+    # add html file to zip, remove extra copy
+    zippy.write(allpngs)
+    zippy.close()
+    os.remove(allpngs)
+
 
 
 if __name__ == "__main__":
