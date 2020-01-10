@@ -1,5 +1,5 @@
 ## input two table, each is from one rep
-## version: 1.0
+## version: 1.0, modified Jan 2020
 
 ##table1 and table2 are the filenames with data
 organizeExp <- function(table1,table2,col1,gene1=NA,tx1=NA,align=c("gene","tx"),col2=col1,gene2=gene1,tx2=tx1){
@@ -49,12 +49,12 @@ cat("{\n")
 cat("\"MAD of log ratios\":", round(median(abs(M)[A>Acutoff])*1.4826,3),",","\n")
 
 ##if you want to compute pearson and spearman on same data it's easy:
-cat("\"Pearson correlation\":",cor(logrep1[A>Acutoff],logrep2[A>Acutoff]),",","\n")
-cat("\"Spearman correlation\":",cor(logrep1[A>Acutoff],logrep2[A>Acutoff],method="spearman"),",","\n")
+cat("\"Pearson correlation\":",round(cor(logrep1[A>Acutoff],logrep2[A>Acutoff]),3),",","\n")
+cat("\"Spearman correlation\":",round(cor(logrep1[A>Acutoff],logrep2[A>Acutoff],method="spearman"),3),",","\n")
 cat("\"SD of log ratios\":", round(sqrt(mean(M[A>Acutoff]^2)),3),"\n")
 cat("}\n")
 
 ###if you want to make plot
 bitmap("MAplot.png")
-plot(A,M)
-##
+smoothScatter(A,M,cex.axis=2,cex.lab=2,bandwidth=.0225,transformation=function(x) x^.1,nbin=500,nrpoints=0)
+##			
