@@ -179,7 +179,7 @@ task align {
       cpu: ncpus
       memory: "${ramGB} GB"
       disks : select_first([disks,"local-disk 100 SSD"])
-      docker: "4dndcic/encode-rnaseq:v1.1_dcic_2_2"
+      docker: "4dndcic/encode-rnaseq:v1.1_dcic_2"
     }
 }
 
