@@ -179,7 +179,7 @@ task align {
       cpu: ncpus
       memory: "${ramGB} GB"
       disks : select_first([disks,"local-disk 100 SSD"])
-      docker: "4dndcic/encode-rnaseq:v1.1_dcic"
+      docker: "4dndcic/encode-rnaseq:v1.1_dcic_2_2"
     }
 }
 
@@ -211,7 +211,7 @@ task  bam_to_signals {
         cpu: ncpus
         memory: "${ramGB} GB"
         disks : select_first([disks,"local-disk 100 SSD"])
-        docker: "4dndcic/encode-rnaseq:v1.1_dcic"
+        docker: "4dndcic/encode-rnaseq:v1.1_dcic_2"
     }
 }
 
@@ -247,7 +247,7 @@ task rsem_quant {
         cpu: ncpus
         memory: "${ramGB} GB"
         disks : select_first([disks,"local-disk 100 SSD"])
-        docker: "4dndcic/encode-rnaseq:v1.1_dcic"
+        docker: "4dndcic/encode-rnaseq:v1.1_dcic_2"
     }
 }
 
@@ -286,7 +286,7 @@ task kallisto {
         cpu: number_of_threads
         memory: "${ramGB} GB"
         disks: select_first([disks, "local-disk 100 SSD"])
-        docker: "4dndcic/encode-rnaseq:v1.1_dcic"
+        docker: "4dndcic/encode-rnaseq:v1.1_dcic_2"
     }
 }
 
@@ -312,7 +312,7 @@ task mad_qc {
         cpu: 2
         memory: "3400 MB"
         disks: select_first([disks,"local-disk 100 SSD"])
-        docker: "4dndcic/encode-rnaseq:v1.1_dcic"
+        docker: "4dndcic/encode-rnaseq:v1.1_dcic_2"
     }
 }
 
@@ -338,6 +338,6 @@ task rna_qc {
         cpu: 2
         memory: "1024 MB"
         disks: select_first([disks, "local-disk 100 SSD"])
-        docker: "4dndcic/encode-rnaseq:v1.1_dcic"
+        docker: "4dndcic/encode-rnaseq:v1.1_dcic_2"
     }
 }
