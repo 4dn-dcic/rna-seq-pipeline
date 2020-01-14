@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Script to run madQC step in ENCODE rna-seq-pipeline
-Modified by Clara Bakker 01/09/2020
+Modified by Clara Bakker 01/14/2020
 """
 
 __author__ = "Otto Jolanki"
@@ -312,7 +312,7 @@ if __name__ == "__main__":
         "--quants", nargs='+', help="all quantification files from RSEM"
     )
     parser.add_argument("--MAD_R_path", type=str, help="path to MAD.R")
-    parser.add_argument("--sample_ids", nargs='+', help="optional labels for processed files")
-    parser.add_argument("--quant_urls", nargs='+', help="links to processed file information")
+    parser.add_argument("--sample_ids", nargs='*', help="optional labels for processed files")
+    parser.add_argument("--quant_urls", nargs='*', help="links to processed file information")
     args = parser.parse_args()
     main(args)
