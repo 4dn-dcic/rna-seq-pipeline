@@ -1,7 +1,7 @@
 workflow mad_qc {
 	Array[File] quantfiles
 	String? mad_qc_disk
-    Array[String]? sampleids
+    	Array[String]? sampleids
 	Array[String]? urls
 
 	call mqc { input:
