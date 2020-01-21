@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Script to run madQC step in ENCODE rna-seq-pipeline
-Modified by Clara Bakker 01/14/2020
+Modified by Clara Bakker 01/21/2020
 """
 
 __author__ = "Otto Jolanki"
@@ -40,10 +40,8 @@ MADQC_CMD = "Rscript {path_to_madR} {quants_1} {quants_2}"
 def remove_quantfile_extensions(quant_fn):
     """Function to remove extensions from a quantification file name.
         Used as default sample ID/label generator
-
         Args:
             quant_fn (String): quantification file name from original user input
-
         Returns:
             String containing the simplified ID/label
     """
@@ -56,10 +54,8 @@ def remove_quantfile_extensions(quant_fn):
 
 def gen_html(pfile):
     """Function to begin the html summary output file
-
         Args:
             pfile (String): Name of the file.
-
         Returns:
             None        
     """
@@ -89,13 +85,11 @@ def gen_html(pfile):
 
 def gen_img(fnames, plotnames, duos, statistics):
     """Generate output matrices for MAD QC plots and statistics
-
         Args:
             fnames (list): contains all replicate files
             plotnames (list): plot (.png) file names
             duos (list): filepairs list of 2-tuples (pairs of replicates with both filename and ID)
             statistics (list): 'array' of qc_record objs
-
         Returns:
             List of four figures (MADplots, Pearson, Standard Deviation and Spearman matrices)
     """
@@ -219,11 +213,11 @@ def main(args):
     if urls:
         with open(allpngs, "a+") as f:
             f.write(links)
-    qc_output_fn = q_out + "_mad_qc_metrics.json"
 
-    # remove any existing JSON file
-    if os.path.isfile(qc_output_fn) :
-        os.remove(qc_output_fn)
+    # create (or replace existing) json
+    qc_output_fn = q_out + "_mad_qc_metrics.json"
+    with open(qc_output_fn, "w+") as f:
+        f.write("\"MAD QC\": {")
 
     # create zipfile for output
     zippy = ZipFile("mad_qc_report.zip", "w")
@@ -240,8 +234,7 @@ def main(args):
         plot_output_filename = "{basename_1}-{basename_2}_mad_plot.png".format(
                 basename_1=fpair[0][1], basename_2=fpair[1][1]
         )
-        imgs.append(plot_output_filename)
-        
+        imgs.append(plot_output_filename)        
 
         # capture the output string from the run
         logger.info("Running madQC command %s", run_cmd)
@@ -249,16 +242,27 @@ def main(args):
         os.rename("MAplot.png", plot_output_filename)
         qc_record = QCMetricRecord()
         mad_r_metric = json.loads(mad_output.decode())
-        descrip = fpair[0][1] + " vs " + fpair[1][1]
+        descrip = fpair[0][1] + " and " + fpair[1][1]
         mad_r_metric_obj = QCMetric(descrip, mad_r_metric)
         qc_record.add(mad_r_metric_obj)
+        ord_record = qc_record.to_ordered_dict()
 
-        with open(qc_output_fn, "a+") as f1 : 
-            # record to JSON and HTML
-            ord_record = qc_record.to_ordered_dict()
-            json.dump(ord_record, f1, indent=2)
+        # record to JSON, omitting outer brackets
+        with open(qc_output_fn, "a+") as f1: 
+            jsn = json.dumps(ord_record, indent=2)
+            f1.write(jsn[1:-2])
+
+            # add a comma between entries
+            if (fpair == filepairs[-1]):
+                 f1.write("\n")
+            else :
+                f1.write(",")
 
             stats.append(ord_record.get(descrip))
+
+    # complete the json file
+    with open(qc_output_fn, "a+") as f:
+        f.write("}")
 
     # create figures, references to the figures files, and labels
     labels = [m[1] for m in names]
