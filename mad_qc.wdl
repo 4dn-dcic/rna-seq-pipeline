@@ -12,8 +12,8 @@ workflow mad_qc {
 	}
 
 	output {
-		File report_zip = mqc.report[0]
-		File madQCmetrics = mqc.metrics[0]
+		File report_zip = mqc.report
+		File madQCmetrics = mqc.metrics
 	}
 }
 
