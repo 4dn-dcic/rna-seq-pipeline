@@ -1,7 +1,7 @@
 workflow mad_qc {
 	Array[File] quantfiles
 	String? mad_qc_disk
-    	Array[String]? sampleids
+    Array[String]? sampleids
 	Array[String]? urls
 
 	call mqc { input:
@@ -9,6 +9,11 @@ workflow mad_qc {
 		disks = mad_qc_disk,
 		ids = sampleids,
 		links = urls
+	}
+
+	output {
+	File report_zip = mqc.report[0]
+	File madQCmetrics = mqc.metrics[0]
 	}
 }
 
@@ -27,8 +32,8 @@ task mqc {
 	}
 
 	output {
-		File report_zip = glob("mad_qc_report.zip")[0]
-		File madQCmetrics = glob("*_mad_qc_metrics.json")[0]
+		File report = glob("mad_qc_report.zip")[0]
+		File metrics = glob("*_mad_qc_metrics.json")[0]
 	}
 
 	runtime {
