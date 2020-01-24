@@ -13,7 +13,7 @@ workflow mad_qc {
 
 	output {
 		File report_zip = mqc.report
-		File madQCmetrics = mqc.metrics
+		File metrics = mqc.madQCmetrics
 	}
 }
 
@@ -33,7 +33,7 @@ task mqc {
 
 	output {
 		File report = glob("mad_qc_report.zip")[0]
-		File metrics = glob("*_mad_qc_metrics.json")[0]
+		File madQCmetrics = glob("*_mad_qc_metrics.json")[0]
 	}
 
 	runtime {
