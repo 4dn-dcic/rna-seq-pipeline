@@ -4,7 +4,7 @@ MAINTAINER Otto Jolanki
 
 RUN apt-get update && apt-get install -y \
     python3-dev \
-    python3-pip \
+	python3-pip \
     wget \
     git \
     unzip \
@@ -14,8 +14,11 @@ RUN apt-get update && apt-get install -y \
     r-base-core \
     ghostscript && rm -rf /var/lib/apt/lists/*
 
+RUN pip3 install --upgrade pip==9.0.1
 RUN pip3 install pandas==0.24.2
 RUN pip3 install pysam==0.15.3
+RUN pip3 install matplotlib
+RUN pip3 install seaborn
 
 # Add mountpoint directory
 RUN mkdir /data
