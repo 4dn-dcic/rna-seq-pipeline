@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Script to run madQC step in ENCODE rna-seq-pipeline
-Modified by Clara Bakker 01/21/2020
+Modified by Clara Bakker 02/13/2020
 """
 
 __author__ = "Otto Jolanki"
@@ -216,9 +216,9 @@ def main(args):
 
     # create (or replace existing) json
     qc_output_fn = q_out + "_mad_qc_metrics.json"
-    with open(qc_output_fn, "w+") as f:
-        f.write("\"MAD QC\": {")
-
+    mq_jsn = open(qc_output_fn, "w+")
+    mq_jsn.close()
+    
     # create zipfile for output
     zippy = ZipFile("mad_qc_report.zip", "w")
 
@@ -226,6 +226,7 @@ def main(args):
     # fpair[x][0] is the full file path, fpair[x][1] is the accession (or sample ID) only 
     stats = []
     imgs = []
+    recs = {}
     for fpair in filepairs:
         run_cmd = MADQC_CMD.format(
             path_to_madR=args.MAD_R_path, quants_1=fpair[0][0], quants_2=fpair[1][0],
@@ -247,22 +248,17 @@ def main(args):
         qc_record.add(mad_r_metric_obj)
         ord_record = qc_record.to_ordered_dict()
 
-        # record to JSON, omitting outer brackets
+        # add record to a dict for the JSON and to stats for html
         with open(qc_output_fn, "a+") as f1: 
-            jsn = json.dumps(ord_record, indent=2)
-            f1.write(jsn[1:-2])
-
-            # add a comma between entries
-            if (fpair == filepairs[-1]):
-                 f1.write("\n")
-            else :
-                f1.write(",")
-
+            recs[descrip] = ord_record.get(descrip)
             stats.append(ord_record.get(descrip))
 
-    # complete the json file
+    # complete the json file by dumping a single item dict with the array of records as a value
     with open(qc_output_fn, "a+") as f:
-        f.write("}")
+        outdict = {}
+        outdict["MAD QC"] = recs
+        js = json.dumps(outdict, indent=2)
+        f.write(js)
 
     # create figures, references to the figures files, and labels
     labels = [m[1] for m in names]
