@@ -253,7 +253,7 @@ def main(args):
             recs[descrip] = ord_record.get(descrip)
             stats.append(ord_record.get(descrip))
 
-    # complete the json file by dumping a single item dict with the array of records as a value
+    # complete the json file by dumping a single item dict with the dict of records as a value
     with open(qc_output_fn, "a+") as f:
         outdict = {}
         outdict["MAD QC"] = recs
