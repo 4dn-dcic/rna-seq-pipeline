@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Script to run madQC step in ENCODE rna-seq-pipeline
-Modified by Clara Bakker 02/13/2020
+Modified by Clara Bakker 02/25/2020
 """
 
 __author__ = "Otto Jolanki"
@@ -208,7 +208,7 @@ def main(args):
             links += base + urls[a] + "\"><button>" + names[a][1] + "</button></a>"
 
     # open html file, add buttons, use basename to create json file
-    allpngs = q_out + ".html"
+    allpngs = "qc_report.html"
     gen_html(allpngs)
     if urls:
         with open(allpngs, "a+") as f:
