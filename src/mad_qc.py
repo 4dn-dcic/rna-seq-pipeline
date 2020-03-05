@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Script to run madQC step in ENCODE rna-seq-pipeline
-Modified by Clara Bakker 02/25/2020
+Modified by Clara Bakker 03/05/2020
 """
 
 __author__ = "Otto Jolanki"
@@ -226,7 +226,7 @@ def main(args):
     # fpair[x][0] is the full file path, fpair[x][1] is the accession (or sample ID) only 
     stats = []
     imgs = []
-    recs = {}
+    recs = []
     for fpair in filepairs:
         run_cmd = MADQC_CMD.format(
             path_to_madR=args.MAD_R_path, quants_1=fpair[0][0], quants_2=fpair[1][0],
@@ -248,10 +248,11 @@ def main(args):
         qc_record.add(mad_r_metric_obj)
         ord_record = qc_record.to_ordered_dict()
 
-        # add record to a dict for the JSON and to stats for html
-        with open(qc_output_fn, "a+") as f1: 
-            recs[descrip] = ord_record.get(descrip)
-            stats.append(ord_record.get(descrip))
+        # add record to stats for html and to list for JSON (with file info added)
+        stats.append(ord_record.get(descrip))
+        ord_record.get(descrip)['File 1'] = fpair[0][1]
+        ord_record.get(descrip)['File 2'] = fpair[1][1]
+        recs.append(ord_record.get(descrip))
 
     # complete the json file by dumping a single item dict with the dict of records as a value
     with open(qc_output_fn, "a+") as f:
